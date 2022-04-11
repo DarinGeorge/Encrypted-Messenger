@@ -1,6 +1,7 @@
+import {useState} from 'react';
 import tw, {RnColorScheme, useAppColorScheme} from 'twrnc';
-import {ColorPallete, ThemedColors} from '../../types';
-import {pallete} from '../constants/Colors';
+import {ColorPallete, ThemedColors, ThemeSettings} from '../../types';
+import {pallete, defaultTheme} from '../constants/Colors';
 
 export interface PalleteReturn {
   pallete: ColorPallete;
@@ -8,20 +9,20 @@ export interface PalleteReturn {
   scheme: RnColorScheme;
   toggleColorScheme(): void;
   setColorScheme(colorScheme: RnColorScheme): void;
+  changeThemeSettings(settings: ThemeSettings): void;
 }
 
-export default function usePallete(): PalleteReturn {
-  const [colorScheme, toggleColorScheme, setColorScheme] = useAppColorScheme(tw);
+const light: ThemedColors = defaultTheme.light;
+const dark: ThemedColors = defaultTheme.dark;
 
-  const themed: ThemedColors = {
-    background: colorScheme === 'light' ? pallete.white : pallete.black,
-    altBackground: colorScheme === 'light' ? pallete.lightGray : pallete.darkGray,
-    border: colorScheme === 'light' ? pallete.lightGray : pallete.darkGray,
-    button: pallete.primary,
-    secondaryButton: pallete.secondary,
-    altButton: 'transparent',
-    icon: colorScheme === 'light' ? pallete.black : pallete.white,
-    iconDisabled: colorScheme === 'light' ? pallete.lightGray : pallete.darkGray,
+export default function usePallete(): PalleteReturn {
+  const [userSettings, setUserSettings] = useState<ThemeSettings>();
+  const [colorScheme, toggleColorScheme, setColorScheme] = useAppColorScheme(tw);
+  const themed: ThemedColors =
+    colorScheme === 'light' ? (userSettings ? userSettings.light : light) : userSettings ? userSettings.dark : dark;
+
+  const changeThemeSettings = (settings: ThemeSettings) => {
+    setUserSettings(settings);
   };
 
   return {
@@ -30,5 +31,6 @@ export default function usePallete(): PalleteReturn {
     scheme: colorScheme,
     toggleColorScheme,
     setColorScheme,
+    changeThemeSettings,
   };
 }

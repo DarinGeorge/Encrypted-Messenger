@@ -1,5 +1,3 @@
-import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-
 export type ColorPallete = {
   white: string;
   black: string;
@@ -23,8 +21,30 @@ export type ThemedColors = {
   iconDisabled: string;
 };
 
-export type RootStackParamList = {
-  Home: undefined;
+export type ThemeSettings = {
+  light: ThemedColors;
+  dark: ThemedColors;
 };
 
-export type UseRootNavigation = NativeStackNavigationProp<RootStackParamList>;
+export type User = {
+  id: string;
+  username: string;
+  avatar?: string;
+};
+
+export type Message = {
+  id: string;
+  author: User;
+  text?: string;
+  audio?: string;
+  video?: string;
+  status: MessageStatus;
+  createdAt: string;
+};
+
+export enum MessageStatus {
+  PENDING = 'Pending',
+  DELIVERED = 'Delivered',
+  READ = 'Read',
+  NOT_DELIVERED = 'Not Delivered',
+}
