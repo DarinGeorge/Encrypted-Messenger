@@ -1,31 +1,57 @@
 import React from 'react';
-import {Animated, ListRenderItemInfo} from 'react-native';
-
-import Row from './components/Row';
+import {Animated} from 'react-native';
+import List from './components/List';
 import InteractionLayer from './InteractionLayer';
-import {Message} from '../types';
-import {fakeData} from './utils/fakeData';
 
-export default class Messenger extends React.Component {
+interface CustomComponents {
+  headerComponent?: () => JSX.Element;
+  footerComponent?: () => JSX.Element;
+  bubbleComponent?: () => JSX.Element;
+  messageTextComponent?: () => JSX.Element;
+  messageImageComponent?: () => JSX.Element;
+  messageVideoComponent?: () => JSX.Element;
+  messageAudioComponent?: () => JSX.Element;
+}
+
+interface Props {
+  onBackPress?: () => void;
+  onInfoPress?: () => void;
+}
+
+interface MessengerState {
+  translateMessages: Animated.Value;
+}
+
+export type MessengerProps = Props & CustomComponents;
+
+export default class Messenger extends React.Component<MessengerProps, MessengerState> {
   state = {
     translateMessages: new Animated.Value(0),
   };
 
-  private scrollY = new Animated.Value(0);
-
-  private renderBubbleRow(info: ListRenderItemInfo<Message>) {
-    return <Row {...{info, authUserID: ''}} />;
+  private onBackPress() {
+    this.props.onBackPress && this.props.onBackPress();
   }
 
-  private onScroll = Animated.event([{nativeEvent: {contentOffset: {y: this.scrollY}}}], {
-    useNativeDriver: true,
-  });
+  private onInfoPress() {
+    this.props.onInfoPress && this.props.onInfoPress();
+  }
+
+  custom: CustomComponents = {
+    headerComponent: this.props.headerComponent,
+    footerComponent: this.props.footerComponent,
+    bubbleComponent: this.props.bubbleComponent,
+    messageTextComponent: this.props.messageTextComponent,
+    messageImageComponent: this.props.messageImageComponent,
+    messageVideoComponent: this.props.messageVideoComponent,
+    messageAudioComponent: this.props.messageAudioComponent,
+  };
 
   render() {
     return (
       <>
-        <InteractionLayer {...{scrollY: this.scrollY}} />
-        <Animated.FlatList data={fakeData} inverted renderItem={this.renderBubbleRow} onScroll={this.onScroll} />
+        <List />
+        <InteractionLayer onBackPress={this.onBackPress} onInfoPress={this.onInfoPress} />
       </>
     );
   }

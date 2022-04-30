@@ -3,11 +3,16 @@ import React from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-export default function InteractionLayer({scrollY}: {scrollY: Animated.Value}) {
+interface HeaderInteractionProps {
+  onBackPress(): void;
+  onInfoPress(): void;
+}
+
+export default function InteractionLayer({onBackPress, onInfoPress}: HeaderInteractionProps) {
   return (
-    <View style={StyleSheet.absoluteFill}>
-      <Header {...{scrollY}} />
+    <>
+      <Header {...{onBackPress, onInfoPress}} />
       <Footer />
-    </View>
+    </>
   );
 }

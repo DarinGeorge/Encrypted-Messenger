@@ -1,9 +1,11 @@
 import React from 'react';
 import {LayoutChangeEvent, StyleProp, Text, View, ViewStyle} from 'react-native';
 import {Message} from '../../../types';
+import {styles as bubbleStyles} from '../../styles/components/Row/Bubble.tailwind';
 
 export interface BubbleProps<T extends Message> {
   key: any;
+  userMatch: boolean;
   showUserAvatar?: boolean;
   currentMessage?: T;
   nextMessage?: T;
@@ -21,6 +23,7 @@ export interface BubbleProps<T extends Message> {
 }
 
 export default function Bubble({
+  userMatch,
   showUserAvatar = true,
   currentMessage = undefined,
   nextMessage = undefined,
@@ -38,8 +41,10 @@ export default function Bubble({
 }: BubbleProps<Message>) {
   if (!currentMessage) return null;
 
+  const styles = bubbleStyles(userMatch);
+
   return (
-    <View key={currentMessage.id} style={{flex: 1}}>
+    <View key={currentMessage.id} style={[styles.container, styles.bubble]}>
       {children}
     </View>
   );
